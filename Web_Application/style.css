@@ -26,7 +26,9 @@ form{
     background-color: rgb(60, 150, 60);
     
 }
-
+.btn-primary:hover{
+    background-color: rgb(35, 101, 29);
+}
 .form-control{
     color: rgba(0,0,0,.87);
     border-bottom-color: rgb(216, 18, 18);

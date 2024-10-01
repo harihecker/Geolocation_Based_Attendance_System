@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance</title>
+    <style>
+        h1 {
+            margin: 20px;
+            text-align: center; 
+        }
+        table {
+            width: 100%; 
+            max-width: 800px; 
+            margin: 100px auto; 
+            border-collapse: collapse; 
+            overflow: hidden; 
+            display: block; 
+            overflow-x: auto; 
+        }
+        th, td {
+            border: 1px solid #ccc; 
+            padding: 10px; 
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        @media (max-width: 600px) {
+            th, td {
+                display: block; 
+                width: 100%; 
+            }
+            tr {
+                margin-bottom: 15px; 
+            }
+        }
+    </style>
+</head>
+<body>  
+    <h1> 
+        Attendance Portal 
+    </h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Employee ID</th>
+                <th>Employee Name</th>
+                <th>Check-in Time</th>
+                <th>Check-out Time</th>
+                <th>Location</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>emp1</td>
+                <td>9:00</td>
+                <td>18:00</td>
+                <td><a href="#">Click Here</a></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>emp2</td>
+                <td>9:00</td>
+                <td>18:00</td>
+                <td><a href="#">Click Here</a></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>emp3</td>
+                <td>9:00</td>
+                <td>18:00</td>
+                <td><a href="#">Click Here</a></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

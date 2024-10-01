@@ -1,19 +1,23 @@
 const Admin = require('../models/admin');
+const User=require('../models/user');
 const bodyParser = require('body-parser');
+
+let currentLocation = { latitude: 0, longitude: 0 };
 
 exports.getLogin = (req, res, next) => {
     res.render('login');
   }
 
-  let currentLocation = { latitude: 0, longitude: 0 };
-
+exports.getDashboard = (req,res,next) => {
+    res.render('dashboard');
+}
 
 exports.postLogin = (req, res, next) => {    
     
     Admin.findOne(req.body)
         .then(admin => {
             if (admin) {
-                res.send('<h1>Welcome to the Dashboard</h1><iframe  name="minimap" height="500" width="500"></iframe><a target="minimap" href="/admin/showLocation">show Location</a>');
+                res.render('dashboard');
             } else {
                 res.send('<h1>Invalid username or password</h1><a href="/admin/login">Go back to login</a>');
             }
@@ -38,4 +42,43 @@ exports.getLocation = (req,res,next)=>{
 
 exports.showLocation=(req,res,next)=>{
     res.render('map');
+}
+
+exports.addUser= (req,res,next) => {
+    res.render('add_user');
+}
+
+exports.postSignUp= async (req,res,next) => {
+    const { userID, Name, Password, Branch } = req.body;
+
+    try {
+        const existingUser = await User.findOne({ userID });
+        
+        if (existingUser) {
+            return res.status(400).send('User ID already exists. Please choose another one.');
+        }
+
+        const newUser = new User({
+            userID,
+            Name,
+            Password,
+            Branch,
+            LastCheckIn: "", 
+            Presence: "No",
+            Latitude:"",
+            Longitude:""   
+        });
+
+        await newUser.save();
+
+        res.status(201).send('User signed up successfully');
+    } catch (error) {
+        console.error('Error during signup:', error);
+
+        if (error.code === 11000) {
+            res.status(400).send('User ID already exists. Please choose another one.');
+        } else {
+            res.status(500).send('An error occurred while signing up.');
+        }
+    }
 }

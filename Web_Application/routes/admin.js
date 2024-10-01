@@ -20,4 +20,11 @@ router.get('/getlocation', adminController.getLocation);
 
 router.get('/showLocation',adminController.showLocation);
 
+router.get('/addUser',adminController.addUser);
+
+router.get('/getDashboard',adminController.getDashboard);
+
+router.post('/postSignUp',adminController.postSignUp);
+
+
 module.exports = router;

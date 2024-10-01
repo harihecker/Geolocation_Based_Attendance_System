@@ -3,8 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:async'; 
-
+import 'dart:async';
 void main() {
   runApp(MyApp());
 }
@@ -13,15 +12,128 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Get Current Location',
+      title: 'Login and Location App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LocationExample(),
+      home: LoginPage(), // Set LoginPage as the starting page
     );
   }
 }
 
+// Login Page
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  final String loginUrl = 'http://192.168.105.41:8080/user/postLogin'; // Your Node.js login URL
+
+  Future<void> _login() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final String userID = _usernameController.text;
+    final String password = _passwordController.text;
+
+    final Map<String, String> requestData = {
+      'userID': userID,
+      'password': password,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(loginUrl),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(requestData),
+      );
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (response.statusCode == 200) {
+        final responseBody = jsonDecode(response.body);
+
+        if (responseBody['success'] == true) {
+        
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LocationExample()),
+          );
+        } else {
+          _showErrorDialog(responseBody['message']);
+        }
+      } else {
+        _showErrorDialog('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      _showErrorDialog('Error logging in: $e');
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Login Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Login Page')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextField(
+              controller: _usernameController,
+              decoration: InputDecoration(labelText: 'UserID'),
+            ),
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
+            SizedBox(height: 20),
+            _isLoading
+                ? CircularProgressIndicator()
+                : ElevatedButton(
+                    onPressed: _login,
+                    child: Text('Login'),
+                  ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Location Page
 class LocationExample extends StatefulWidget {
   @override
   _LocationExampleState createState() => _LocationExampleState();
@@ -57,7 +169,6 @@ class _LocationExampleState extends State<LocationExample> {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       setState(() {
@@ -67,7 +178,6 @@ class _LocationExampleState extends State<LocationExample> {
       return;
     }
 
-    // Check for location permission
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -97,7 +207,6 @@ class _LocationExampleState extends State<LocationExample> {
         };
         print(locationData);
 
-        // Send a POST request to the server
         var response = await http.post(
           Uri.parse(serverUrl),
           headers: {"Content-Type": "application/json"},

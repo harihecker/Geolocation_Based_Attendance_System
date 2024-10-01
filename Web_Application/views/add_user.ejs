@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add user</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 400px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Sign Up</h2>
+    <form id="signupForm">
+        <label for="userID">User ID:</label>
+        <input type="text" id="userID" name="userID" required>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="branch">Branch:</label>
+        <input type="text" id="branch" name="branch" required>
+
+        <button type="submit">Sign Up</button>
+    </form>
+</div>
+
+<script>
+document.getElementById('signupForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    // Get the form values
+    const user = {
+        userID: document.getElementById('userID').value,
+        Name: document.getElementById('name').value,
+        Password: document.getElementById('password').value,
+        Branch: document.getElementById('branch').value
+    };
+
+    try {
+        const response = await fetch('/admin/postSignUp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        });
+
+        // Check if the request was successful
+        if (response.status === 201) {
+            alert('Sign-up successful!');
+            window.location.href = '/admin/getDashboard';
+            document.getElementById('signupForm').reset(); 
+        } else if (response.status === 400) {
+            alert('User ID already exists. Please choose another one.');
+            window.location.href = '/admin/addUser';
+        } else {
+            alert('Sign-up failed. Please try again.');
+            window.location.href = '/admin/addUser';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while signing up.');
+    }
+});
+
+</script>
+
+</body>
+</html>

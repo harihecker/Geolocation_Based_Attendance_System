@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6ffeb;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #80e28d;
+            padding: 10px 20px;
+        }
+        .navbar .logo-placeholder {
+            width: 50px;
+            height: 50px;
+            background-color: #444;
+            border-radius: 50%;
+        }
+        .navbar .menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .navbar .menu .menu-item {
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .navbar .menu .menu-item:hover {
+            background-color: #d4ffd4;
+        }
+        .navbar .logout {
+            padding: 10px 20px;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .navbar .logout:hover {
+            background-color: #666;
+        }
+        .dashboard {
+            padding: 20px;
+        }
+        .dashboard h2 {
+            margin-bottom: 20px;
+        }
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .card {
+            width: calc(33% - 20px);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .card img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .card .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .card .card-header .info {
+            display: flex;
+            align-items: center;
+        }
+        .card .card-header .attendance {
+            font-weight: bold;
+        }
+        .card .card-body {
+            margin-top: 10px;
+        }
+        a{
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo-placeholder"></div>
+        <div class="menu">
+            <a href="#dashboard"><div class="menu-item" id="dashboard">Dashboard</div></a>
+            <a href="/manage"><div class="menu-item">Manage</div></a>
+            <a href="/admin/addCompany"><div class="menu-item">Add Group</div></a>
+            <a href="/admin/addUser"><div class="menu-item">Add People</div></a>
+        </div>
+        <button class="logout">Logout</button>
+    </div>
+    <div class="dashboard">
+        <h2>Dashboard</h2>
+        <div class="cards">
+            <div class="card">
+                <div class="card-header">
+                    <div class="info">
+                        <img src="https://via.placeholder.com/40" alt="Profile">
+                        <div>
+                            <div>Company A</div>
+                            <div>Employees</div>
+                        </div>
+                    </div>
+                    <div class="attendance">155/200</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="info">
+                        <img src="https://via.placeholder.com/40" alt="Profile">
+                        <div>
+                            <div>Company B</div>
+                            <div>Title</div>
+                            <div>Description</div>
+                        </div>
+                    </div>
+                    <div class="attendance">155/200</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="info">
+                        <img src="https://via.placeholder.com/40" alt="Profile">
+                        <div>
+                            <div>Company C</div>
+                            <div>Title</div>
+                            <div>Description</div>
+                        </div>
+                    </div>
+                    <div class="attendance">155/200</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="info">
+                        <img src="https://via.placeholder.com/40" alt="Profile">
+                        <div>
+                            <div>"Quote"</div>
+                            <div>Title</div>
+                            <div>Description</div>
+                        </div>
+                    </div>
+                    <div class="attendance">155/200</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="info">
+                        <img src="https://via.placeholder.com/40" alt="Profile">
+                        <div>
+                            <div>"Quote"</div>
+                            <div>Title</div>
+                            <div>Description</div>
+                        </div>
+                    </div>
+                    <div class="attendance">155/200</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="info">
+                        <img src="https://via.placeholder.com/40" alt="Profile">
+                        <div>
+                            <div>"Quote"</div>
+                            <div>Title</div>
+                            <div>Description</div>
+                        </div>
+                    </div>
+                    <div class="attendance">155/200</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

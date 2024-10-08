@@ -7,75 +7,184 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f6ffeb;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
         }
         .navbar {
-            background-color: #333;
-            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #80e28d;
+            padding: 10px 20px;
         }
-        .navbar a {
-            float: left;
-            display: block;
+        .navbar .logo-placeholder {
+            width: 50px;
+            height: 50px;
+            background-color: #444;
+            border-radius: 50%;
+        }
+        .navbar .menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .navbar .menu .menu-item {
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .navbar .menu .menu-item:hover {
+            background-color: #d4ffd4;
+        }
+        .navbar .logout {
+            padding: 10px 20px;
+            background-color: #444;
             color: white;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
-        .navbar a:hover {
-            background-color: #ddd;
-            color: black;
+        .navbar .logout:hover {
+            background-color: #666;
         }
-        .container {
-            max-width: 1000px;
-            margin: 50px auto;
+        .dashboard {
             padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
         }
-        h1 {
+        .dashboard h2 {
             margin-bottom: 20px;
         }
-        iframe {
-            border: 1px solid #ccc;
-            margin-top: 20px;
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
         }
-        a {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
+        .card {
+            width: calc(33% - 20px);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .card img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .card .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .card .card-header .info {
+            display: flex;
+            align-items: center;
+        }
+        .card .card-header .attendance {
+            font-weight: bold;
+        }
+        .card .card-body {
+            margin-top: 10px;
+        }
+        a{
             text-decoration: none;
-            border-radius: 5px;
-        }
-        a:hover {
-            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-
-<!-- Navigation bar -->
-<div class="navbar">
-    <a href="#dashboard">Dashboard</a>
-    <a href="/manage">Manage</a>
-    <a href="/admin/addUser">Add User</a>
-</div>
-
-<div class="container">
-    <h1>Welcome to the Dashboard</h1>
-
-    <!-- Iframe to show location -->
-    <iframe name="minimap" height="500" width="500"></iframe>
-
-    <!-- Link to load location in the iframe -->
-    <br>
-    <a target="minimap" href="/admin/showLocation">Show Location</a>
-</div>
-
+    <div class="navbar">
+        <div class="logo-placeholder"></div>
+        <div class="menu">
+            <a href="#dashboard"><div class="menu-item" id="dashboard">Dashboard</div></a>
+            <a href="/manage"><div class="menu-item">Manage</div></a>
+            <a href="/admin/addCompany"><div class="menu-item">Add Group</div></a>
+            <a href="/admin/addUser"><div class="menu-item">Add People</div></a>
+        </div>
+        <button class="logout">Logout</button>
+    </div>
+    <div class="dashboard">
+        <h2>Dashboard</h2>
+        <div class="cards">
+            <div class="card">
+                <div class="card-header">
+                    <div class="info">
+                        <img src="https://via.placeholder.com/40" alt="Profile">
+                        <div>
+                            <div>Company A</div>
+                            <div>Employees</div>
+                        </div>
+                    </div>
+                    <div class="attendance">155/200</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="info">
+                        <img src="https://via.placeholder.com/40" alt="Profile">
+                        <div>
+                            <div>Company B</div>
+                            <div>Title</div>
+                            <div>Description</div>
+                        </div>
+                    </div>
+                    <div class="attendance">155/200</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="info">
+                        <img src="https://via.placeholder.com/40" alt="Profile">
+                        <div>
+                            <div>Company C</div>
+                            <div>Title</div>
+                            <div>Description</div>
+                        </div>
+                    </div>
+                    <div class="attendance">155/200</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="info">
+                        <img src="https://via.placeholder.com/40" alt="Profile">
+                        <div>
+                            <div>"Quote"</div>
+                            <div>Title</div>
+                            <div>Description</div>
+                        </div>
+                    </div>
+                    <div class="attendance">155/200</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="info">
+                        <img src="https://via.placeholder.com/40" alt="Profile">
+                        <div>
+                            <div>"Quote"</div>
+                            <div>Title</div>
+                            <div>Description</div>
+                        </div>
+                    </div>
+                    <div class="attendance">155/200</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="info">
+                        <img src="https://via.placeholder.com/40" alt="Profile">
+                        <div>
+                            <div>"Quote"</div>
+                            <div>Title</div>
+                            <div>Description</div>
+                        </div>
+                    </div>
+                    <div class="attendance">155/200</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

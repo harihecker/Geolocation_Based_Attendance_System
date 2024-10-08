@@ -1,5 +1,7 @@
 const Admin = require('../models/admin');
 const User=require('../models/user');
+const Company=require('../models/company');
+
 const bodyParser = require('body-parser');
 
 let currentLocation = { latitude: 0, longitude: 0 };
@@ -8,16 +10,17 @@ exports.getLogin = (req, res, next) => {
     res.render('login');
   }
 
-exports.getDashboard = (req,res,next) => {
-    res.render('dashboard');
-}
+exports.getDashboard =async (req,res,next) => {
+    const companies = await Company.find({});
+    res.render('dashboard',{ companies });}
 
 exports.postLogin = (req, res, next) => {    
     
     Admin.findOne(req.body)
-        .then(admin => {
+        .then(async admin => {
             if (admin) {
-                res.render('dashboard');
+                const companies = await Company.find({});
+                res.render('dashboard',{ companies });
             } else {
                 res.send('<h1>Invalid username or password</h1><a href="/admin/login">Go back to login</a>');
             }
@@ -81,4 +84,33 @@ exports.postSignUp= async (req,res,next) => {
             res.status(500).send('An error occurred while signing up.');
         }
     }
+}
+
+exports.addCompany = (req,res,next)=>{
+    res.render('add_company');
+};
+
+exports.postAddCompany = async (req,res,next)=>{
+    const newCompany = new Company({
+        companyName: req.body.CompanyName,
+        Place: req.body.Place,
+        Latitude: req.body.Latitude,
+        Longitude: req.body.Longitude
+      });
+      console.log(newCompany)
+      newCompany.save()
+        .then(() => {
+          res.status(201).json({ message: "Company added successfully!" });
+        })
+        .catch(error => {
+          if (error.name === 'ValidationError') {
+            res.status(400).json({ message: "Validation Error", errors: error.errors });
+          } else {
+            res.status(500).json({ message: "Internal Server Error" });
+          }
+        });      
+}
+
+exports.getCompanyDetails = (res,req,next)=>{
+    
 }

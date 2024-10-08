@@ -107,19 +107,27 @@
     <div class="dashboard">
         <h2>Dashboard</h2>
         <div class="cards">
+            <% companies.forEach(company => { %>
+            
             <div class="card">
+                <a href="admin/getCompanyDetails?companyName=<%= encodeURIComponent(company.companyName)%>&place=<%= encodeURIComponent(company.Place) %>">
+
                 <div class="card-header">
                     <div class="info">
                         <img src="https://via.placeholder.com/40" alt="Profile">
                         <div>
-                            <div>Company A</div>
-                            <div>Employees</div>
+                            <div><%= company.companyName %></div>
+                            <div><%= company.Place %></div>
                         </div>
                     </div>
                     <div class="attendance">155/200</div>
                 </div>
+            </a>
+
             </div>
-            <div class="card">
+            <% }); %>
+
+            <!-- <div class="card">
                 <div class="card-header">
                     <div class="info">
                         <img src="https://via.placeholder.com/40" alt="Profile">
@@ -183,7 +191,7 @@
                     </div>
                     <div class="attendance">155/200</div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </body>

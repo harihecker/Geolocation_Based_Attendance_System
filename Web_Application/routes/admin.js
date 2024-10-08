@@ -26,5 +26,10 @@ router.get('/getDashboard',adminController.getDashboard);
 
 router.post('/postSignUp',adminController.postSignUp);
 
+router.get('/addCompany',adminController.addCompany);
+
+router.post('/postAddCompany',adminController.postAddCompany);
+
+// router.get('/getCompanyDetails'.adminController.getCompanyDetails);
 
 module.exports = router;

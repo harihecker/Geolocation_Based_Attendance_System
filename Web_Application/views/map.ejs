@@ -52,7 +52,7 @@
       // Fetch location from the server and update the map
       async function fetchLocation() {
   try {
-    const response = await fetch('http://192.168.105.41:8080/admin/getlocation'); 
+    const response = await fetch('http://172.16.64.12:8080/admin/getlocation'); 
     const textResponse = await response.text();  
     console.log('Raw Response:', textResponse);  
 

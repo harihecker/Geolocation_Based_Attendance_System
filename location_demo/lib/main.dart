@@ -4,6 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
+
 void main() {
   runApp(MyApp());
 }
@@ -32,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
-  final String loginUrl = 'http://192.168.86.172:8080/user/postLogin'; // Your Node.js login URL
+  final String loginUrl = 'http://192.168.200.87:8080/user/postLogin'; // Your Node.js login URL
 
   Future<void> _login() async {
     setState(() {
@@ -62,10 +63,11 @@ class _LoginPageState extends State<LoginPage> {
         final responseBody = jsonDecode(response.body);
 
         if (responseBody['success'] == true) {
-        
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => LocationExample()),
+            MaterialPageRoute(
+              builder: (context) => LocationExample(userID: userID),
+            ),
           );
         } else {
           _showErrorDialog(responseBody['message']);
@@ -135,6 +137,10 @@ class _LoginPageState extends State<LoginPage> {
 
 // Location Page
 class LocationExample extends StatefulWidget {
+  final String userID; // Accept userID from LoginPage
+
+  LocationExample({required this.userID});
+
   @override
   _LocationExampleState createState() => _LocationExampleState();
 }
@@ -142,7 +148,7 @@ class LocationExample extends StatefulWidget {
 class _LocationExampleState extends State<LocationExample> {
   Position? _currentPosition;
   String? _errorMessage;
-  final String serverUrl = 'http://192.168.86.172:8080/admin/location'; // Your Node.js server URL
+  final String serverUrl = 'http://192.168.200.87:8080/admin/location'; // Your Node.js server URL
   StreamSubscription<Position>? _positionStreamSubscription;
 
   @override
@@ -202,6 +208,7 @@ class _LocationExampleState extends State<LocationExample> {
     if (_currentPosition != null) {
       try {
         Map<String, dynamic> locationData = {
+          'userID': widget.userID, // Include userID
           'latitude': _currentPosition!.latitude,
           'longitude': _currentPosition!.longitude,
         };

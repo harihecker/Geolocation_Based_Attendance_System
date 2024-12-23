@@ -16,7 +16,7 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  Branch:{
+  Company:{
     type: String,
     required:true
   },

@@ -111,6 +111,6 @@ exports.postAddCompany = async (req,res,next)=>{
         });      
 }
 
-exports.getCompanyDetails = (res,req,next)=>{
-    
+exports.getCompanyDetails = (req,res,next)=>{
+    res.render('attendance_portal');
 }

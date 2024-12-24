@@ -56,12 +56,12 @@
         }
         /* Style the link as a button */
         .btn-link {
-            margin-left:25%;
-            display: inline-block;
+            margin: auto;
+            display: grid;
+            width: 150px;
             padding: 10px 20px;
             background-color: #444;
             color: white;
-            text-align: center;
             border-radius: 5px;
             text-decoration: none;
             cursor: pointer;
@@ -102,6 +102,43 @@
         }
         a:hover {
             text-decoration: underline;
+        }
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+        #modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            z-index: 1000; /* High z-index to appear above all content */
+            justify-content: center;
+            align-items: center;
+        }
+
+        #modal iframe {
+            width: 80%;
+            height: 80%;
+            border: none;
+            background-color: white;
+        }
+
+        #modal .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #80e28d;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
         }
         @media (max-width: 600px) {
             th, td {
@@ -145,8 +182,7 @@
     <h1>Employees of <%= companyName %></h1>
     
     <!-- Link styled as a button -->
-    <a href="/admin/showAllLocations?company=<%= encodeURIComponent(companyName) %>" class="btn-link">Show All Locations</a>
-
+    <!-- <a href="/admin/showAllLocations?company=<%= encodeURIComponent(companyName) %>" class="btn-link">Show All Locations</a> -->
     <table>
         <thead>
             <tr>
@@ -155,7 +191,7 @@
                 <th>Status</th>
                 <th>Check-in Time</th>
                 <th>Check-out Time</th>
-                <th>Location</th>
+                <th>See user location on map</th>
             </tr>
         </thead>
         <tbody>
@@ -166,10 +202,42 @@
                     <td data-label="Status"><%= user.Presence %></td>
                     <td data-label="Check-in Time"><%= user.LastCheckIn %></td>
                     <td data-label="Check-out Time"><%= user.CheckOutTime || 'N/A' %></td>
-                    <td data-label="Location"><a href="/admin/showLocation?userID=<%= encodeURIComponent(user.userID) %>">Click Here</a></td>
+                    <td data-label="Location">
+                        <a href="#" onclick="showModal('/admin/showLocation?userID=<%= encodeURIComponent(user.userID) %>')">
+                            <img src="/images/show_on_map.png" alt="Location Icon" style="display:grid; margin: auto; padding: 0;width: 30px;">
+                        </a> 
+                    </td>
                 </tr>
             <% }) %>
         </tbody>
     </table>
+    <a href="#" onclick="showModal('/admin/showAllLocations?company=<%= encodeURIComponent(companyName) %>')" class="btn-link">Show All Locations</a>
+    <div id="modal">
+        <button class="close-btn" onclick="closeModal()">Close</button>
+        <iframe id="modalFrame" src=""></iframe>
+    </div>
+    <!-- <iframe id="embedFrame" src=""></iframe> -->
+    <script>
+        function showModal(url) {
+            const modal = document.getElementById('modal');
+            const iframe = document.getElementById('modalFrame');
+      
+            // Update iframe source
+            iframe.src = url;
+      
+            // Show the modal
+            modal.style.display = 'flex';
+            }
+
+        // Function to close the modal
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            const iframe = document.getElementById('modalFrame');
+      
+            // Clear iframe source and hide the modal
+            iframe.src = '';
+            modal.style.display = 'none';
+        }
+    </script>
 </body>
 </html>

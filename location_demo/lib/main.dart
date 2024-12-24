@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
-  final String loginUrl = 'http://192.168.79.87:8080/user/postLogin'; // Your Node.js login URL
+  final String loginUrl = 'http://192.168.79.41:8080/user/postLogin'; // Your Node.js login URL
 
   Future<void> _login() async {
     setState(() {
@@ -148,14 +148,16 @@ class LocationExample extends StatefulWidget {
 class _LocationExampleState extends State<LocationExample> {
   Position? _currentPosition;
   String? _errorMessage;
-  final String serverUrl = 'http://192.168.79.87:8080/admin/location'; // Your Node.js server URL
+  final String serverUrl = 'http://192.168.79.41:8080/admin/location'; // Your Node.js server URL
   StreamSubscription<Position>? _positionStreamSubscription;
 
   @override
   void initState() {
     super.initState();
     _checkPermissionsAndLocationService();
+    _requestLocationPermissions();
     _startListeningForLocationChanges();
+    _startTimer(); // Start looping _sendLocationToServer()
   }
 
   Future<void> _startListeningForLocationChanges() async {
@@ -262,10 +264,74 @@ class _LocationExampleState extends State<LocationExample> {
     );
   }
 
+  //open settings to turn on location always
+  Future<void> _requestLocationPermissions() async {
+  // Check the current status of locationWhenInUse permission
+  var status = await Permission.locationWhenInUse.status;
+
+  // If not granted, request the permission
+  if (!status.isGranted) {
+    status = await Permission.locationWhenInUse.request();
+  }
+
+  // If granted, proceed to request locationAlways permission
+  if (status.isGranted) {
+    var alwaysStatus = await Permission.locationAlways.status;
+    if (!alwaysStatus.isGranted) {
+      alwaysStatus = await Permission.locationAlways.request();
+      if (!alwaysStatus.isGranted) {
+        // Permission denied, show dialog to guide user to settings
+        _showLocationPermissionDialog();
+      }
+    }
+  } else if (status.isPermanentlyDenied) {
+    // Permission permanently denied, show dialog to guide user to settings
+    _showLocationPermissionDialog();
+  }
+}
+void _showLocationPermissionDialog() {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Location Permission Required'),
+        content: Text(
+          'This app requires "Always Allow" location access to function properly. '
+          'Please go to settings and enable this permission.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              await openAppSettings();
+            },
+            child: Text('Open Settings'),
+          ),
+        ],
+      );
+    },
+  );
+}
+  
+  late Timer _timer;
+
+void _startTimer() {
+  _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+    _sendLocationToServer();
+  });
+}
+
   @override
   void dispose() {
     _positionStreamSubscription?.cancel(); // Clean up stream when widget is disposed
     super.dispose();
+    _timer.cancel(); 
   }
 
   @override

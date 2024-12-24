@@ -4,7 +4,7 @@ const Company=require('../models/company');
 
 const bodyParser = require('body-parser');
 
-let currentLocation = { latitude: 0, longitude: 0 };
+let currentLocation = { Latitude: 0, Longitude: 0 };
 
 exports.getLogin = (req, res, next) => {
     res.render('login');
@@ -32,11 +32,40 @@ exports.postLogin = (req, res, next) => {
 };
 
 
-exports.postLocation = (req,res,next)=>{
-    const { latitude, longitude } = req.body;
-    currentLocation = { latitude, longitude };
-    console.log('location',currentLocation);
-    res.send({message: 'String received'});
+exports.postLocation = async(req,res,next)=>{
+    // const { latitude, longitude ,userID} = req.body;
+    // currentLocation = { latitude, longitude ,userID};
+    // console.log('location',currentLocation);
+    // res.send({message: 'String received'});
+    console.log('Raw body received:', req.body); 
+
+  const { userID, latitude, longitude } = req.body; 
+
+  if (!userID || latitude === undefined || longitude === undefined) {
+    console.log('Validation failed:', { latitude, longitude, userID });
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+//   console.log('Extracted fields:', { userID, latitude, longitude });
+
+  try {
+    const updatedUser = await User.findOneAndUpdate(
+      { userID: userID }, 
+      { Latitude: latitude, Longitude: longitude },
+      { new: true, useFindAndModify: false } 
+    );
+
+    if (!updatedUser) {
+      console.log('User not found for userID:', userID);
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // console.log('Updated user location:', updatedUser);
+    res.status(200).json({ message: 'Location updated successfully', user: updatedUser });
+  } catch (error) {
+    console.error('Error occurred:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
 };
 
 exports.getLocation = (req,res,next)=>{
@@ -47,12 +76,18 @@ exports.showLocation=(req,res,next)=>{
     res.render('map');
 }
 
-exports.addUser= (req,res,next) => {
-    res.render('add_user');
+exports.addUser=async (req,res,next) => {
+    try {
+        const companies = await Company.find();
+        res.render('add_user', { companies });
+      } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+      }
 }
 
-exports.postSignUp= async (req,res,next) => {
-    const { userID, Name, Password, Branch } = req.body;
+exports.postSignUp = async (req, res, next) => {
+    const { userID, Name, Password, Company } = req.body;  
 
     try {
         const existingUser = await User.findOne({ userID });
@@ -65,11 +100,11 @@ exports.postSignUp= async (req,res,next) => {
             userID,
             Name,
             Password,
-            Branch,
+            Company,  
             LastCheckIn: "", 
             Presence: "No",
-            Latitude:"",
-            Longitude:""   
+            Latitude: "",
+            Longitude: ""   
         });
 
         await newUser.save();
@@ -77,14 +112,14 @@ exports.postSignUp= async (req,res,next) => {
         res.status(201).send('User signed up successfully');
     } catch (error) {
         console.error('Error during signup:', error);
-
         if (error.code === 11000) {
             res.status(400).send('User ID already exists. Please choose another one.');
         } else {
             res.status(500).send('An error occurred while signing up.');
         }
     }
-}
+};
+
 
 exports.addCompany = (req,res,next)=>{
     res.render('add_company');
@@ -111,6 +146,20 @@ exports.postAddCompany = async (req,res,next)=>{
         });      
 }
 
-exports.getCompanyDetails = (req,res,next)=>{
-    res.render('attendance_portal');
-}
+exports.getCompanyDetails = async (req, res,next) => {
+    const companyName = req.query.companyName;
+  
+    if (!companyName) {
+      return res.status(400).send('Company name is required');
+    }
+  
+    try {
+      const users = await User.find({ Company: companyName });
+  
+      res.render('attendance_portal', { users, companyName });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Server error');
+    }
+  }
+  

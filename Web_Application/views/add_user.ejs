@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add user</title>
+    <title>Add User</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -26,12 +26,23 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        input {
+        input, select {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
+            font-size: 16px;
+        }
+        select {
+            -webkit-appearance: none; /* Remove default dropdown arrow in some browsers */
+            -moz-appearance: none;
+            appearance: none;
+            background-color: #fff;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="0,0 100,0 50,100" fill="%23222"></polygon></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 10px;
         }
         button {
             width: 100%;
@@ -41,9 +52,15 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
         }
         button:hover {
             background-color: #218838;
+        }
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -61,8 +78,15 @@
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
 
-        <label for="branch">Company:</label>
-        <input type="text" id="branch" name="branch" required>
+        <label for="company">Company:</label>
+        <select id="company" name="company" required> 
+            <option value="" disabled selected>Select a Company</option>
+            <% companies.forEach(company => { %>
+                <option value="<%= company.companyName %>"><%= company.companyName %></option>
+            <% }) %>
+        </select>
+        
+        
 
         <button type="submit">Sign Up</button>
     </form>
@@ -72,12 +96,11 @@
 document.getElementById('signupForm').addEventListener('submit', async function(event) {
     event.preventDefault();
 
-    // Get the form values
     const user = {
         userID: document.getElementById('userID').value,
         Name: document.getElementById('name').value,
         Password: document.getElementById('password').value,
-        Branch: document.getElementById('branch').value
+        Company: document.getElementById('company').value 
     };
 
     try {
@@ -89,7 +112,6 @@ document.getElementById('signupForm').addEventListener('submit', async function(
             body: JSON.stringify(user)
         });
 
-        // Check if the request was successful
         if (response.status === 201) {
             alert('Sign-up successful!');
             window.location.href = '/admin/getDashboard';

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance</title>
+    <title>Company Details</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -125,39 +125,29 @@
         </div>
         <button class="logout">Logout</button>
     </div>
-    <h1>Employees</h1>
+    <h1>Employees of <%= companyName %></h1>
     <table>
         <thead>
             <tr>
                 <th>Employee ID</th>
                 <th>Employee Name</th>
+                <th>Status</th>
                 <th>Check-in Time</th>
                 <th>Check-out Time</th>
                 <th>Location</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td data-label="Employee ID">1</td>
-                <td data-label="Employee Name">emp1</td>
-                <td data-label="Check-in Time">9:00</td>
-                <td data-label="Check-out Time">18:00</td>
-                <td data-label="Location"><a href="#">Click Here</a></td>
-            </tr>
-            <tr>
-                <td data-label="Employee ID">2</td>
-                <td data-label="Employee Name">emp2</td>
-                <td data-label="Check-in Time">9:00</td>
-                <td data-label="Check-out Time">18:00</td>
-                <td data-label="Location"><a href="#">Click Here</a></td>
-            </tr>
-            <tr>
-                <td data-label="Employee ID">3</td>
-                <td data-label="Employee Name">emp3</td>
-                <td data-label="Check-in Time">9:00</td>
-                <td data-label="Check-out Time">18:00</td>
-                <td data-label="Location"><a href="#">Click Here</a></td>
-            </tr>
+            <% users.forEach(user => { %>
+                <tr>
+                    <td data-label="Employee ID"><%= user.userID %></td>
+                    <td data-label="Employee Name"><%= user.Name %></td>
+                    <td data-label="Status"><%= user.Presence %></td>
+                    <td data-label="Check-in Time"><%= user.LastCheckIn %></td>
+                    <td data-label="Check-out Time"><%= user.CheckOutTime || 'N/A' %></td>
+                    <td data-label="Location"><a href="#">Click Here</a></td>
+                </tr>
+            <% }) %>
         </tbody>
     </table>
 </body>

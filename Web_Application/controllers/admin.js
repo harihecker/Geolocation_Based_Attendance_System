@@ -68,13 +68,65 @@ exports.postLocation = async(req,res,next)=>{
   }
 };
 
-exports.getLocation = (req,res,next)=>{
-    res.json(currentLocation);
+exports.getLocation = async (req, res, next) => {
+  try {
+      const userID = req.query.userID;
+
+      if (!userID) {
+          return res.status(400).json({ error: 'UserID is required' });
+      }
+      const user = await User.findOne(
+          { userID },
+          { Latitude: 1, Longitude: 1, _id: 0 }
+      );
+
+      if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+      }
+
+      const { Latitude, Longitude } = user;
+
+      res.json({ latitude: Latitude, longitude: Longitude });
+  } catch (error) {
+      console.error('Error fetching location:', error);
+      res.status(500).json({ error: 'Server error' });
+  }
 };
 
-exports.showLocation=(req,res,next)=>{
-    res.render('map');
-}
+exports.showLocation = (req, res, next) => {
+  const userID = req.query.userID;
+  res.render('map', { userID });
+};
+
+// Get all user locations for a given company
+exports.getAllLocations = async (req, res, next) => {
+  const company = req.query.company;
+  console.log("Fetching locations for company:", company);
+
+  if (!company) {
+    return res.status(400).send('Company name is required');
+  }
+
+  try {
+    const users = await User.find({ Company: company }, { Latitude: 1, Longitude: 1, Name: 1, _id: 0 });
+    if (users.length === 0) {
+      return res.status(404).send('No users found in this company');
+    }
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).send('Server error');
+  }
+};
+
+// Render the map page with the company name
+exports.showAllLocations = (req, res, next) => {
+  const company = req.query.company;
+  if (!company) {
+    return res.status(400).send('Company name is required');
+  }
+  res.render('all_locations', { company });
+};
 
 exports.addUser=async (req,res,next) => {
     try {

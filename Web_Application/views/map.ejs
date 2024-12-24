@@ -9,9 +9,6 @@
     <!-- Include Leaflet CSS and JS without integrity checks -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-
-
-
     <style>
       /* Ensure the map container has a fixed height */
       #map {
@@ -28,46 +25,57 @@
     <script>
       // Initialize the map with a default view (set to some coordinates initially)
       var map = L.map('map').setView([0, 0], 2); // Default to 0,0 (equator) with zoom level 2
-
+    
       // Use OpenStreetMap tiles
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
-
+    
       var marker;
-
+    
       // Function to update the map with new latitude and longitude
       function updateMap(lat, lng) {
         // If a marker already exists, remove it
         if (marker) {
           map.removeLayer(marker);
         }
-
+    
         // Center the map to the new location and add a marker
-        map.setView([lat, lng], 13);
+        map.setView([lat, lng], 16);
         marker = L.marker([lat, lng]).addTo(map);
         marker.bindPopup(`<b>Current Location:</b><br>Latitude: ${lat}<br>Longitude: ${lng}`).openPopup();
       }
-
+    
       // Fetch location from the server and update the map
       async function fetchLocation() {
-  try {
-    const response = await fetch('http://192.168.79.87:8080/admin/getlocation'); 
-    const textResponse = await response.text();
-    console.log('Raw Response:', textResponse);  
-
-    const location = JSON.parse(textResponse);  
-    console.log(location);
-    if (location.latitude !== 0 && location.longitude !== 0) {
-      updateMap(location.latitude, location.longitude);
-    }
-  } catch (error) {
-    console.error('Error fetching location:', error);
-  }
-}
-// fetchLocation();
+        const userID = new URLSearchParams(window.location.search).get('userID'); // Get userID from query params
+        if (!userID) {
+          console.error('UserID not provided');
+          return;
+        }
+    
+        try {
+          const response = await fetch(`/admin/getlocation?userID=${userID}`);
+          const location = await response.json();
+    
+          console.log('Location data:', location);
+    
+          if (location.latitude && location.longitude) {
+            updateMap(location.latitude, location.longitude);
+          } else {
+            console.warn('Invalid location data received:', location);
+          }
+        } catch (error) {
+          console.error('Error fetching location:', error);
+        }
+      }
+    
       // Periodically fetch the location every 5 seconds
       setInterval(fetchLocation, 5000);
+    
+      // Fetch the location immediately on page load
+      fetchLocation();
     </script>
+    
   </body>
 </html>

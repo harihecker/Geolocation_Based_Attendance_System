@@ -32,4 +32,8 @@ router.post('/postAddCompany',adminController.postAddCompany);
 
 router.get('/getCompanyDetails',adminController.getCompanyDetails);
 
+router.get('/getAllLocations',adminController.getAllLocations);
+
+router.get('/showAllLocations',adminController.showAllLocations);
+
 module.exports = router;

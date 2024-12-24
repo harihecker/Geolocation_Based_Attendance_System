@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Members Location</title>
+    
+    <!-- Include Leaflet CSS and JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+    <style>
+      #map {
+        height: 400px;  /* Adjust as necessary */
+        width: 100%;
+      }
+    </style>
+</head>
+<body>
+
+  <h3>Locations of All Members in the Company: <span id="company-name"><%= company %></span></h3>
+  <div id="map"></div>
+
+  <script>
+    // Initialize the map with a default zoom level and coordinates
+    var map = L.map('map').setView([0, 0], 2); // Set to zoom level 2 initially
+
+    // Use OpenStreetMap tiles for the base layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var markers = []; // To keep track of all markers on the map
+
+    // Function to update the map with markers for each user
+    function updateMap(users) {
+      // Remove all existing markers from the map
+      markers.forEach(marker => map.removeLayer(marker));
+      markers = []; // Clear the marker array
+
+      // Loop through each user and place a marker on the map
+      users.forEach(user => {
+        if (user.Latitude && user.Longitude) {
+          const marker = L.marker([user.Latitude, user.Longitude])
+            .addTo(map)
+            .bindPopup(`<b>${user.Name}</b><br>Latitude: ${user.Latitude}<br>Longitude: ${user.Longitude}`);
+          markers.push(marker); // Add the marker to the markers array
+        }
+      });
+
+      // Adjust the zoom level of the map to fit all markers
+      if (users.length > 0) {
+        var latitudes = users.map(user => user.Latitude);
+        var longitudes = users.map(user => user.Longitude);
+        var bounds = new L.LatLngBounds(
+          latitudes.map((lat, index) => [lat, longitudes[index]])
+        );
+        map.fitBounds(bounds); // Adjust the map view to show all markers within bounds
+      }
+    }
+
+    // Fetch all locations for users in the specified company
+    async function fetchLocations() {
+      const company = new URLSearchParams(window.location.search).get('company'); // Get company from query params
+      if (!company) {
+        console.error('Company name not provided');
+        return;
+      }
+
+      // Display the company name in the heading
+      document.getElementById('company-name').textContent = company;
+
+      try {
+        const response = await fetch(`/admin/getAllLocations?company=${company}`);
+        const users = await response.json();
+        console.log('All users:', users);
+
+        // Update map with the locations of all users
+        updateMap(users);
+      } catch (error) {
+        console.error('Error fetching locations:', error);
+      }
+    }
+
+    // Fetch the locations immediately on page load
+    fetchLocations();
+
+    // Periodically fetch the locations every 10 seconds to update the map
+    setInterval(fetchLocations, 10000); // Update every 10 seconds
+
+  </script>
+
+</body>
+</html>

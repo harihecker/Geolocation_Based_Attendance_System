@@ -67,6 +67,9 @@
         <label for="longitude">longitude:</label>
         <input type="text" id="longitude" name="longitude" required>
 
+        <label for="radius">Radius(in Meters):</label>
+        <input type="text" id="radius" name="Radius" required>
+
         <button type="submit">Submit</button>
     </form>
 </div>
@@ -79,8 +82,8 @@ document.getElementById('addCompanyForm').addEventListener('submit', async funct
         CompanyName: document.getElementById('CompanyName').value,
         Place: document.getElementById('Place').value,
         Latitude: document.getElementById('latitude').value,
-        Longitude: document.getElementById('longitude').value
-
+        Longitude: document.getElementById('longitude').value,
+        Radius: document.getElementById('radius').value
     };
 
     try {

@@ -17,10 +17,20 @@ const companySchema = new Schema({
     required:true
   },
   Latitude:{
-    type:String
+    type:String,
+    required:true
   },
   Longitude:{
-    type:String
+    type:String,
+    required:true
+  },
+  Radius:{
+    type:Number,
+    required:true
+  },
+  numberOfPresent: { 
+    type: Number,
+    default: 0
   }
 });
 

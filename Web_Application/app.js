@@ -27,6 +27,7 @@ app.use('/',(req, res, next) => {
     res.render('404');
   });
 
+
 mongoose
   .connect(
     'mongodb+srv://Vasanth:admin@cluster0.j8exy.mongodb.net/Geolocation-based-attendance-system?retryWrites=true&w=majority&appName=Cluster0'

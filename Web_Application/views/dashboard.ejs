@@ -114,13 +114,13 @@
                     <!-- <a href="/admin/getCompanyDetails"> -->
                 <div class="card-header">
                     <div class="info">
-                        <img src="https://via.placeholder.com/40" alt="Profile">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzfvjZuE8-syWacrmpFILs4-xVGQkwmaS8nw&s" alt="Profile">
                         <div>
                             <div><%= company.companyName %></div>
                             <div><%= company.Place %></div>
                         </div>
                     </div>
-                    <div class="attendance">155/200</div>
+                    <div class="attendance"><%= company.numberOfPresent %>/<%= company.totalEmployees %></div>
                 </div>
             </a>
 

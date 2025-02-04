@@ -12,15 +12,16 @@ exports.getLogin = (req, res, next) => {
 
 exports.getDashboard =async (req,res,next) => {
     const companies = await Company.find({});
+    // companies.total=Company.countDocuments({});
+    // companies.present=Company.countDocuments({ Presence: "True" });
     res.render('dashboard',{ companies });}
 
 exports.postLogin = (req, res, next) => {    
-    
     Admin.findOne(req.body)
         .then(async admin => {
             if (admin) {
                 const companies = await Company.find({});
-                const count = await Company.
+                // const count = await Company.
                 res.render('dashboard',{ companies });
             } else {
                 res.send('<h1>Invalid username or password</h1><a href="/admin/login">Go back to login</a>');
@@ -53,7 +54,7 @@ function haversine(lat1, lon1, lat2, lon2) {
 
 exports.postLocation = async (req, res, next) => {
   const { userID, latitude, longitude } = req.body;
-
+  console.log(req.body);
   if (!userID || latitude === undefined || longitude === undefined) {
       console.log('Validation failed:', { latitude, longitude, userID });
       return res.status(400).json({ error: 'Missing required fields' });
@@ -87,7 +88,8 @@ exports.postLocation = async (req, res, next) => {
                 Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
                 Math.sin(dLon / 2) * Math.sin(dLon / 2);
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c; // distance in kilometers
+      console.log("Distance : ",R*c);
+      return (R * c* 1000); // distance in kilometers
   }
 
   // Fetch company coordinates
@@ -225,8 +227,9 @@ exports.addUser=async (req,res,next) => {
       }
 }
 
+
 exports.postSignUp = async (req, res, next) => {
-    const { userID, Name, Password, Company } = req.body;  
+    const { userID, Name, Password, Company: companyName } = req.body;  
 
     try {
         const existingUser = await User.findOne({ userID });
@@ -235,11 +238,17 @@ exports.postSignUp = async (req, res, next) => {
             return res.status(400).send('User ID already exists. Please choose another one.');
         }
 
+        const company = await Company.findOne({ companyName });
+
+        if (!company) {
+            return res.status(404).send('Company not found.');
+        }
+
         const newUser = new User({
             userID,
             Name,
             Password,
-            Company,  
+            Company: companyName,  
             LastCheckIn: "", 
             Presence: "No",
             Latitude: "",
@@ -248,7 +257,12 @@ exports.postSignUp = async (req, res, next) => {
 
         await newUser.save();
 
-        res.status(201).send('User signed up successfully');
+        await Company.updateOne(
+            { companyName },
+            { $inc: { totalEmployees: 1 } }
+        );
+
+        res.status(201).send('User signed up successfully, and company employee count updated.');
     } catch (error) {
         console.error('Error during signup:', error);
         if (error.code === 11000) {
@@ -258,6 +272,7 @@ exports.postSignUp = async (req, res, next) => {
         }
     }
 };
+
 
 
 exports.addCompany = (req,res,next)=>{

@@ -31,6 +31,10 @@ const companySchema = new Schema({
   numberOfPresent: { 
     type: Number,
     default: 0
+  },
+  totalEmployees: {
+    type: Number,
+    default: 0
   }
 });
 

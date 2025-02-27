@@ -21,6 +21,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 //   res.send({message: 'String received'});
 // }
 // );
+app.use((req, res, next) => {
+  res.setHeader("X-Frame-Options", process.env.X_FRAME_OPTIONS || "DENY");
+  res.setHeader("Content-Security-Policy", process.env.CONTENT_SECURITY_POLICY || "default-src 'self'");
+  next();
+});
 app.use('/admin', adminRoutes);
 app.use('/user', userRoutes)
 app.use('/',(req, res, next) => {
@@ -33,7 +38,7 @@ mongoose
     'mongodb+srv://Vasanth:admin@cluster0.j8exy.mongodb.net/Geolocation-based-attendance-system?retryWrites=true&w=majority&appName=Cluster0'
   )
   .then(result => {
-    app.listen(8080, '0.0.0.0',()=>{
+    app.listen(process.env.X_ZOHO_CATALYST_LISTEN_PORT||8080, '0.0.0.0',()=>{
       console.log("running on 0.0.0.0");
     }
     );

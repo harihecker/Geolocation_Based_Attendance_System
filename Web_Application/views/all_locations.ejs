@@ -71,7 +71,7 @@
       document.getElementById('company-name').textContent = company;
 
       try {
-        const response = await fetch(`/admin/getAllLocations?company=${company}`);
+        const response = await fetch(`https://appsail-50025180894.development.catalystappsail.in/admin/getAllLocations?company=${company}`);
         const users = await response.json();
         console.log('All users:', users);
 

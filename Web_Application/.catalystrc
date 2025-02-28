@@ -1,0 +1,30 @@
+{
+  "defaults": {
+    "project": 1,
+    "env": 1
+  },
+  "actives": {
+    "project": 1,
+    "env": 1
+  },
+  "projects": [
+    {
+      "idx": 1,
+      "id": "6516000000013001",
+      "name": "GeoAttendance",
+      "domain": {
+        "id": "50025180894",
+        "name": "geoattendance-60036588445.development"
+      },
+      "timezone": "Asia/Kolkata",
+      "env": [
+        {
+          "idx": 1,
+          "id": "60036588445",
+          "name": "Development",
+          "type": 3
+        }
+      ]
+    }
+  ]
+}

@@ -21,7 +21,7 @@ const userSchema = new Schema({
     required:true
   },
   LastCheckIn:{
-    type:String
+    type:Date
   },
   Presence:{
     type:String

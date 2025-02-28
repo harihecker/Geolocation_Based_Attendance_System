@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
-  final String loginUrl = 'http://192.168.79.41:8080/user/postLogin'; // Your Node.js login URL
+  final String loginUrl = 'https://appsail-50025180894.development.catalystappsail.in/user/postLogin'; // Your Node.js login URL
 
   Future<void> _login() async {
     setState(() {
@@ -148,7 +148,7 @@ class LocationExample extends StatefulWidget {
 class _LocationExampleState extends State<LocationExample> {
   Position? _currentPosition;
   String? _errorMessage;
-  final String serverUrl = 'http://192.168.79.41:8080/admin/location'; // Your Node.js server URL
+  final String serverUrl = 'https://appsail-50025180894.development.catalystappsail.in/admin/location'; // Your Node.js server URL
   StreamSubscription<Position>? _positionStreamSubscription;
 
   @override

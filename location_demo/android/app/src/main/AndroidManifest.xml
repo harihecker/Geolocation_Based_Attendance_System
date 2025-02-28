@@ -6,7 +6,7 @@ package="com.example.location_demo">
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:label="location_demo"
+        android:label="Geolocation"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
